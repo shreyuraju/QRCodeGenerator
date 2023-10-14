@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     Button btnGenerate;
     ImageView QR;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,8 +48,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void link(int n) {
         String url = "upi://pay?pa="+  //payment method
-                "9206581025@axisb" +  //VPA number
-                "&pn=Shreyas%20M"+ //receivernama
+                "9876543210@abc" +  //VPA number                      //Replace your UPI id HERE
+                "&pn=Abc%20ABC"+ //receivernama                       //Replace your name with "%20" to add space inbetween your name
                 "&am="+n+   //receiveable amount
                 "&cu=INR"   //current Indian Rupees
                 ;
