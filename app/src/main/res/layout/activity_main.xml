@@ -8,7 +8,17 @@
     android:layout_gravity="center"
     tools:context=".MainActivity">
 
-
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/upiTextview"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="UPI ID IS Not Set"
+        android:textSize="24sp"/>
     <ImageView
         android:id="@+id/IvQR"
         android:layout_width="wrap_content"
@@ -39,5 +49,5 @@
             android:layout_marginLeft="20dp"
             android:text="Generate"/>
     </LinearLayout>
-
+</LinearLayout>
 </LinearLayout>

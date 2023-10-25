@@ -2,25 +2,39 @@ package com.shreyasm.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
+
 public class MainActivity extends AppCompatActivity {
-
     EditText amount;
-
     Button btnGenerate;
     ImageView QR;
 
+    TextView upitextview;
+
+    SharedPreferences sharedPreferences;
+    private static final String SHARED_PREF_NAME = "upidetails";
+
+    private static final String KEY_UPIID = "upiid";
+
+    private static final String KEY_UPINAME = "upiname";
+
+    private static final String KEY_UPIDESC = "upidesc";
+
+    String upiid, upiname, upidesc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +44,21 @@ public class MainActivity extends AppCompatActivity {
         amount = findViewById(R.id.EtAmount);
         btnGenerate = findViewById(R.id.BtnGenerate);
         QR = findViewById(R.id.IvQR);
+        upitextview = findViewById(R.id.upiTextview);
+
+        sharedPreferences = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+
+        upiid = sharedPreferences.getString(KEY_UPIID,null);
+        upiname = sharedPreferences.getString(KEY_UPINAME, null);
+        upidesc = sharedPreferences.getString(KEY_UPIDESC, null);
+
+        if ( upiid!=null || upiname!=null || upidesc!=null ) {
+            upitextview.setText("Name: "+upiname+"\nUPI ID: "+upiid);
+        } else {
+            Intent i = new Intent(MainActivity.this, getupidetails.class);
+            startActivity(i);
+            finish();
+        }
 
         btnGenerate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,17 +72,15 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
     private void link(int n) {
-        String url = "upi://pay?pa="+  //payment method
+        String url = "upi://pay?pa="+
                 "9876543210@abc" +  //VPA number                      //Replace your UPI id HERE
                 "&pn=Abc%20ABC"+ //receivernama                       //Replace your name with "%20" to add space inbetween your name
                 "&am="+n+   //receiveable amount
                 "&cu=INR"   //current Indian Rupees
                 ;
-
         generateQR(url);
     }
 
@@ -66,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
 
             //set QR to imageView
             QR.setImageBitmap(bitmap);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
