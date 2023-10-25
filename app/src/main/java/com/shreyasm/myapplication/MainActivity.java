@@ -76,10 +76,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void link(int n) {
         String url = "upi://pay?pa="+
-                "9876543210@abc" +  //VPA number                      //Replace your UPI id HERE
-                "&pn=Abc%20ABC"+ //receivernama                       //Replace your name with "%20" to add space inbetween your name
+                upiid +  //VPA number                      //Replace your UPI id HERE
+                "&pn="+upiname+ //receivernama                       //Replace your name with "%20" to add space inbetween your name
                 "&am="+n+   //receiveable amount
-                "&cu=INR"   //current Indian Rupees
+                "&cu=INR"+
+                "&tn="+upidesc  //current Indian Rupees
                 ;
         generateQR(url);
     }
