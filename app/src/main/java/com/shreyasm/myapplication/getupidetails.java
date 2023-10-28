@@ -61,11 +61,20 @@ public class getupidetails extends AppCompatActivity {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
                 //Checking wether text is empty or not
-                if (upiid.isEmpty()) upiId.setError("UPI ID IS REQUIRED");
+                if (upiid.isEmpty()) {
+                    upiId.setError("UPI ID IS REQUIRED");
+                    return;
+                }
 
-                if (upiname.isEmpty()) upiName.setError("UPI Name IS REQUIRED");
+                if (upiname.isEmpty()) {
+                    upiName.setError("UPI Name IS REQUIRED");
+                    return;
+                }
 
-                if (upidesc.isEmpty()) upiDesc.setError("UPI Description IS REQUIRED");
+                if (upidesc.isEmpty()) {
+                    upiDesc.setError("UPI Description IS REQUIRED");
+                    return;
+                }
 
                 editor.putString(KEY_UPIID,upiid);
                 editor.putString(KEY_UPINAME, upiname);

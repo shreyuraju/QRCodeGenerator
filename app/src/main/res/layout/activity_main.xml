@@ -26,11 +26,20 @@
         android:layout_gravity="center"
         android:layout_margin="20dp"/>
 
+    <TextView
+        android:id="@+id/amontText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:textSize="28sp"/>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:layout_margin="20dp"
+        android:layout_margin="5dp"
         android:gravity="center"
         android:layout_gravity="center">
 
@@ -41,6 +50,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="Enter Amount"
+            android:maxLines="1"
+            android:maxWidth="120dp"
+            android:maxLength="6"
             android:inputType="number" />
         <Button
             android:id="@+id/BtnGenerate"

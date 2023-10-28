@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     Button btnGenerate;
     ImageView QR;
 
-    TextView upitextview;
+    TextView upitextview, amountText;
 
     SharedPreferences sharedPreferences;
     private static final String SHARED_PREF_NAME = "upidetails";
@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         btnGenerate = findViewById(R.id.BtnGenerate);
         QR = findViewById(R.id.IvQR);
         upitextview = findViewById(R.id.upiTextview);
+        amountText = findViewById(R.id.amontText);
 
         sharedPreferences = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
 
@@ -66,7 +67,13 @@ public class MainActivity extends AppCompatActivity {
                 String amnt = amount.getText().toString();
                 try {
                     int n= Integer.parseInt(amnt);
+
+                    if (n>5000) {
+                        amount.setError("You can only receive upto ₹5000");
+                        return;
+                    }
                     link(n);
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -82,10 +89,11 @@ public class MainActivity extends AppCompatActivity {
                 "&cu=INR"+
                 "&tn="+upidesc  //current Indian Rupees
                 ;
-        generateQR(url);
+        generateQR(url,n);
     }
 
-    private void generateQR(String url) {
+    private void generateQR(String url, int n) {
+        amountText.setText("Receiving\nAmount:"+n);
         MultiFormatWriter writer = new MultiFormatWriter();
         try {
             BitMatrix matrix = writer.encode(url, BarcodeFormat.QR_CODE,1000,1000);
