@@ -6,11 +6,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
@@ -35,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String KEY_UPIDESC = "upidesc";
 
     String upiid, upiname, upidesc;
+
+    boolean isPressed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,5 +115,23 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(isPressed) {
+            finishAffinity();
+            System.exit(0);
+        } else {
+            Toast.makeText(this, "Press again to Exit", Toast.LENGTH_SHORT).show();
+            isPressed = true;
+        }
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                isPressed = false;
+            }
+        };
+        new Handler().postDelayed(runnable,2000);
     }
 }
