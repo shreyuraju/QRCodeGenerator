@@ -68,6 +68,11 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     int n= Integer.parseInt(amnt);
 
+                    if (n<=0) {
+                        amount.setError("minimum amount is ₹1 & receive upto ₹5000");
+                        return;
+                    }
+
                     if (n>5000) {
                         amount.setError("You can only receive upto ₹5000");
                         return;
