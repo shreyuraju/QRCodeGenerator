@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String amnt = amount.getText().toString();
                 try {
-                    int n= Integer.parseInt(amnt);
+                    double n= Double.parseDouble(amnt);
 
                     if (n<=0 || n>5000) {
                         amount.setError("minimum amount is ₹1 & receive upto ₹5000");
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void link(int n) {
+    private void link(double n) {
         String url = "upi://pay?pa="+
                 upiid +  //VPA number                      //Replace your UPI id HERE
                 "&pn="+upiname+ //receivernama                       //Replace your name with "%20" to add space inbetween your name
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         generateQR(url,n);
     }
 
-    private void generateQR(String url, int n) {
+    private void generateQR(String url, double n) {
         amountText.setText("Receiving\nAmount:"+n);
         MultiFormatWriter writer = new MultiFormatWriter();
         try {
