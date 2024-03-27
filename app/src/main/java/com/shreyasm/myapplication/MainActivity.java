@@ -22,7 +22,7 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 public class MainActivity extends AppCompatActivity {
     EditText amount;
-    Button btnGenerate;
+    Button btnGenerate, btnClear;
     ImageView QR;
 
     TextView upitextview, amountText;
@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
     boolean isPressed = false;
 
+    Bitmap bitmap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
         amount = findViewById(R.id.EtAmount);
         btnGenerate = findViewById(R.id.BtnGenerate);
+        btnClear = findViewById(R.id.BtnClear);
         QR = findViewById(R.id.IvQR);
         upitextview = findViewById(R.id.upiTextview);
         amountText = findViewById(R.id.amontText);
@@ -65,6 +68,9 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
+        btnClear.setVisibility(View.GONE);
+
+
         btnGenerate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,16 +83,21 @@ public class MainActivity extends AppCompatActivity {
                         return;
                     }
 
-//                    if (n>5000) {
-//                        amount.setError("You can only receive upto ₹5000");
-//                        return;
-//                    }
 
                     link(n);
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+        });
+
+        btnClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Clear the bitmap
+                QR.setImageDrawable(null);
+                amountText.setText(null);
+                btnClear.setVisibility(View.GONE);
             }
         });
     }
@@ -104,11 +115,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void generateQR(String url, double n) {
         amountText.setText("Receiving\nAmount:"+n);
+        btnClear.setVisibility(View.VISIBLE);
         MultiFormatWriter writer = new MultiFormatWriter();
         try {
             BitMatrix matrix = writer.encode(url, BarcodeFormat.QR_CODE,1000,1000);
             BarcodeEncoder encoder = new BarcodeEncoder();
-            Bitmap bitmap = encoder.createBitmap(matrix);
+            bitmap = encoder.createBitmap(matrix);
 
             //set QR to imageView
             QR.setImageBitmap(bitmap);
