@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     double n= Double.parseDouble(amnt);
 
-                    if (n<=0 || n>5000) {
+                    if (n<=1 || n>5000) {
                         amount.setError("minimum amount is ₹1 & receive upto ₹5000");
                         return;
                     }
