@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     EditText amount;
     Button btnGenerate, btnClear;
     ImageView QR;
-    TextView upitextview, amountText;
+    TextView selectupi, upitextview, amountText;
     Spinner upiSpinner; // Spinner for multiple UPI IDs
 
     SharedPreferences sharedPreferences;
@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         btnGenerate = findViewById(R.id.BtnGenerate);
         btnClear = findViewById(R.id.BtnClear);
         QR = findViewById(R.id.IvQR);
+        selectupi = findViewById(R.id.selectupi);
         upitextview = findViewById(R.id.upiTextview);
         amountText = findViewById(R.id.amontText);
         upiSpinner = findViewById(R.id.upiSpinner); // Initialize the Spinner
@@ -230,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Update the UI with the selected UPI details
-        upitextview.setText("Selected UPI ID: " + upiId + "\nName: " + upiname);
+        upitextview.setText("UPI: " + upiId + "\nName: " + upiname);
     }
 
     private Map<String, String> getUpiDetails() {
@@ -322,6 +323,7 @@ public class MainActivity extends AppCompatActivity {
             upitextview.setText("Selected UPI ID: " + selectedUpiId);
             amount.setVisibility(View.VISIBLE);
             btnGenerate.setVisibility(View.VISIBLE);
+            selectupi.setVisibility(View.GONE);
         } else {
             upitextview.setText("No UPI ID selected");
             amount.setVisibility(View.GONE);
