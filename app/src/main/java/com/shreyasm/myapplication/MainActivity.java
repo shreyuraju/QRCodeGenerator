@@ -179,8 +179,8 @@ public class MainActivity extends AppCompatActivity {
         layout.addView(upiNameInput);
 
         final EditText upiDescInput = new EditText(this);
-        upiDescInput.setHint("UPI Description");
-        layout.addView(upiDescInput);
+//        upiDescInput.setHint("UPI Description");
+//        layout.addView(upiDescInput);
 
         builder.setView(layout);
 
@@ -226,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
             upidesc = parts[1];
         } else {
             upiname = "Unknown";
-            upidesc = "No description";
+            upidesc = "";
         }
 
         // Update the UI with the selected UPI details
@@ -283,8 +283,9 @@ public class MainActivity extends AppCompatActivity {
             String url = "upi://pay?pa=" + selectedUpiId +
                     "&pn=" + parts[0] +
                     "&am=" + n +
-                    "&cu=INR" +
-                    "&tn=" + parts[1];
+                    "&cu=INR";
+//                    "&tn=" + parts[1]
+
             generateQR(url, n);
         } else {
             Toast.makeText(this, "No UPI details found for selected ID", Toast.LENGTH_SHORT).show();
