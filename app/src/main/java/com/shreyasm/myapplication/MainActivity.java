@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
         upiNameInput.setHint("UPI Name");
         layout.addView(upiNameInput);
 
-        final EditText upiDescInput = new EditText(this);
+//        final EditText upiDescInput = new EditText(this);
 //        upiDescInput.setHint("UPI Description");
 //        layout.addView(upiDescInput);
 
@@ -189,17 +189,23 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton("Save", (dialog, which) -> {
             String upiId = upiIdInput.getText().toString();
             String upiName = upiNameInput.getText().toString();
-            String upiDesc = upiDescInput.getText().toString();
+//            String upiDesc = upiDescInput.getText().toString();
 
             // Check if any field is empty
-            if (upiId.isEmpty() || upiName.isEmpty() || upiDesc.isEmpty()) {
+            if (upiId.isEmpty() ||
+                    upiName.isEmpty()
+//                    ||  upiDesc.isEmpty()
+            ) {
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
                 return;
             }
 
             // Save UPI details to SharedPreferences
             Map<String, String> upiDetails = getUpiDetails();
-            upiDetails.put(upiId, upiName + "," + upiDesc); // Save Name and Description as a comma-separated string
+            upiDetails.put(
+                    upiId, upiName
+//                            + "," + upiDesc
+            ); // Save Name and Description as a comma-separated string
 
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString(KEY_SELECTED_UPI, upiId); // Set the newly added UPI ID as selected
@@ -224,10 +230,10 @@ public class MainActivity extends AppCompatActivity {
         if (details != null) {
             String[] parts = details.split(",");
             upiname = parts[0];
-            upidesc = parts[1];
+//            upidesc = parts[1];
         } else {
             upiname = "Unknown";
-            upidesc = "";
+//            upidesc = "";
         }
 
         // Update the UI with the selected UPI details
