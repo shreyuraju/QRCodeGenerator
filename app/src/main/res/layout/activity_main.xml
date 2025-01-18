@@ -16,10 +16,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:text="select UPI to receive" />
 
         <Spinner
-            android:layout_width="300dp"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:id="@+id/upiSpinner" />
 
@@ -34,7 +35,7 @@
             android:id="@+id/upiTextview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_gravity="left"
             android:text="UPI ID IS Not Set"
             android:textSize="13sp" />
 

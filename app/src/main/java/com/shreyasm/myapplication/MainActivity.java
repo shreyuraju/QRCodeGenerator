@@ -230,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Update the UI with the selected UPI details
-        upitextview.setText("Selected UPI ID: " + upiId + "\nName: " + upiname + "\nDescription: " + upidesc);
+        upitextview.setText("Selected UPI ID: " + upiId + "\nName: " + upiname);
     }
 
     private Map<String, String> getUpiDetails() {
@@ -294,7 +294,7 @@ public class MainActivity extends AppCompatActivity {
     private void generateQR(String upiLink, double n) {
         try {
             MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
-            BitMatrix bitMatrix = multiFormatWriter.encode(upiLink, BarcodeFormat.QR_CODE, 1000, 1000);
+            BitMatrix bitMatrix = multiFormatWriter.encode(upiLink, BarcodeFormat.QR_CODE, 800, 800);
             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
             bitmap = barcodeEncoder.createBitmap(bitMatrix);
             QR.setImageBitmap(bitmap);
