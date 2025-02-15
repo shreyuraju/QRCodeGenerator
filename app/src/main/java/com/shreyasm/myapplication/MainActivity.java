@@ -122,8 +122,8 @@ public class MainActivity extends AppCompatActivity {
             try {
                 double n = Double.parseDouble(amnt);
 
-                if (n < 1 || n > 5000) {
-                    amount.setError("minimum amount is ₹1 & receive upto ₹5000");
+                if (n < 1 || n > 2000) {
+                    amount.setError("minimum amount is ₹1 & receive upto ₹2000");
                     return;
                 }
 
@@ -153,12 +153,104 @@ public class MainActivity extends AppCompatActivity {
             showAddUPIDialog();
         }
 
-//        if (item.getItemId() == R.id.viewupi) {
-//            Toast.makeText(this, "View UPI", Toast.LENGTH_SHORT).show();
-//        }
+        if (item.getItemId() == R.id.editupi) {
+            showEditUPIDialog();
+        }
 
         return super.onOptionsItemSelected(item);
     }
+
+    private void showEditUPIDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select UPI to EDIT");
+
+        // Create a layout for the dialog with a Spinner to select UPI ID
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(40, 40, 40, 40);
+
+        // Get the UPI details from SharedPreferences
+        Map<String, String> upiDetails = getUpiDetails();
+        ArrayList<String> upiIds = new ArrayList<>(upiDetails.keySet());
+
+        if (upiIds.isEmpty()) {
+            Toast.makeText(this, "No UPI IDs available to edit.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Spinner to show existing UPI IDs
+        final Spinner upiIdSpinner = new Spinner(this);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, upiIds);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        upiIdSpinner.setAdapter(adapter);
+        layout.addView(upiIdSpinner);
+
+        // EditText for UPI ID (this will allow the user to edit the UPI ID)
+        final EditText upiIdInput = new EditText(this);
+        upiIdInput.setHint("UPI ID");
+        layout.addView(upiIdInput);
+
+        // EditText for UPI Name
+        final EditText upiNameInput = new EditText(this);
+        upiNameInput.setHint("UPI Name");
+        layout.addView(upiNameInput);
+
+        // Populate the fields with the current data of the selected UPI ID
+        upiIdSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                String selectedUpiId = upiIdSpinner.getSelectedItem().toString();
+                String selectedUpiName = upiDetails.get(selectedUpiId);
+
+                // Populate the UPI ID and Name EditTexts with the current values
+                upiIdInput.setText(selectedUpiId);
+                upiNameInput.setText(selectedUpiName);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // Handle case if nothing is selected (though it shouldn't happen)
+            }
+        });
+
+        builder.setView(layout);
+
+        // Add buttons to the dialog
+        builder.setPositiveButton("Update", (dialog, which) -> {
+            String newUpiId = upiIdInput.getText().toString();
+            String newUpiName = upiNameInput.getText().toString();
+
+            if (newUpiId.isEmpty() || newUpiName.isEmpty()) {
+                Toast.makeText(this, "Please fill both UPI ID and UPI Name", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Ensure the new UPI ID is different from the selected one
+            String selectedUpiId = (String) upiIdSpinner.getSelectedItem();
+            if (!newUpiId.equals(selectedUpiId)) {
+                // Remove the old UPI entry (if the ID is changed)
+                upiDetails.remove(selectedUpiId);
+            }
+
+            // Update the UPI details with the new ID and name
+            upiDetails.put(newUpiId, newUpiName);  // Update or add new UPI
+
+            // Save updated UPI details in SharedPreferences
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(KEY_UPI_DETAILS, serializeUpiDetails(upiDetails));  // Serialize and save the map
+            editor.apply();
+
+            // Update the UI
+            updateUI();
+            Toast.makeText(this, "UPI Details Updated", Toast.LENGTH_SHORT).show();
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+
+        builder.show();
+    }
+
+
 
     private void showAddUPIDialog() {
         // Create a dialog builder
@@ -179,33 +271,22 @@ public class MainActivity extends AppCompatActivity {
         upiNameInput.setHint("UPI Name");
         layout.addView(upiNameInput);
 
-//        final EditText upiDescInput = new EditText(this);
-//        upiDescInput.setHint("UPI Description");
-//        layout.addView(upiDescInput);
-
         builder.setView(layout);
 
         // Add buttons to the dialog
         builder.setPositiveButton("Save", (dialog, which) -> {
             String upiId = upiIdInput.getText().toString();
             String upiName = upiNameInput.getText().toString();
-//            String upiDesc = upiDescInput.getText().toString();
 
             // Check if any field is empty
-            if (upiId.isEmpty() ||
-                    upiName.isEmpty()
-//                    ||  upiDesc.isEmpty()
-            ) {
+            if (upiId.isEmpty() || upiName.isEmpty()) {
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
                 return;
             }
 
             // Save UPI details to SharedPreferences
             Map<String, String> upiDetails = getUpiDetails();
-            upiDetails.put(
-                    upiId, upiName
-//                            + "," + upiDesc
-            ); // Save Name and Description as a comma-separated string
+            upiDetails.put(upiId, upiName);
 
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString(KEY_SELECTED_UPI, upiId); // Set the newly added UPI ID as selected
@@ -230,10 +311,8 @@ public class MainActivity extends AppCompatActivity {
         if (details != null) {
             String[] parts = details.split(",");
             upiname = parts[0];
-//            upidesc = parts[1];
         } else {
             upiname = "Unknown";
-//            upidesc = "";
         }
 
         // Update the UI with the selected UPI details
@@ -279,51 +358,10 @@ public class MainActivity extends AppCompatActivity {
         return upiDetails;
     }
 
-    private void link(double n) {
-        // Use the selected UPI ID for generating the QR code
-        Map<String, String> upiDetails = getUpiDetails();
-        String selectedUpiId = sharedPreferences.getString(KEY_SELECTED_UPI, null);
-
-        if (selectedUpiId != null && upiDetails.containsKey(selectedUpiId)) {
-            String details = upiDetails.get(selectedUpiId);
-            String[] parts = details.split(",");
-            String url = "upi://pay?pa=" + selectedUpiId +
-                    "&pn=" + parts[0] +
-                    "&am=" + n +
-                    "&cu=INR";
-//                    "&tn=" + parts[1]
-
-            generateQR(url, n);
-        } else {
-            Toast.makeText(this, "No UPI details found for selected ID", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void generateQR(String upiLink, double n) {
-        try {
-            MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
-            BitMatrix bitMatrix = multiFormatWriter.encode(upiLink, BarcodeFormat.QR_CODE, 800, 800);
-            BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-            bitmap = barcodeEncoder.createBitmap(bitMatrix);
-            QR.setImageBitmap(bitmap);
-            amountText.setText("Amount: ₹" + n);
-            btnClear.setVisibility(View.VISIBLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        updateUI();
-    }
-
     private void updateUI() {
         Map<String, String> upiDetails = getUpiDetails();
         String selectedUpiId = sharedPreferences.getString(KEY_SELECTED_UPI, null);
 
-        // If UPI ID is selected and available in the details map
         if (selectedUpiId != null && upiDetails.containsKey(selectedUpiId)) {
             updateUpiDetails(selectedUpiId);
             upitextview.setText("Selected UPI ID: " + selectedUpiId);
@@ -340,5 +378,24 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new ArrayList<>(upiDetails.keySet()));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         upiSpinner.setAdapter(adapter);
+    }
+
+    private void link(double amount) {
+        try {
+            String selectedUpiId = sharedPreferences.getString(KEY_SELECTED_UPI, null);
+            String upiDetails = getUpiDetails().get(selectedUpiId);
+
+            String qrCodeContent = "upi://pay?pa=" + selectedUpiId + "&pn=" + upiname + "&mc=0000&tid=1234567890&tr=txn123&tn=Payment&am=" + amount + "&cu=INR";
+
+            MultiFormatWriter writer = new MultiFormatWriter();
+            BitMatrix bitMatrix = writer.encode(qrCodeContent, BarcodeFormat.QR_CODE, 500, 500);
+            BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+            bitmap = barcodeEncoder.createBitmap(bitMatrix);
+            QR.setImageBitmap(bitmap);
+            amountText.setText("₹" + amount);
+            btnClear.setVisibility(View.VISIBLE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
