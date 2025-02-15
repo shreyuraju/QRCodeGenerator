@@ -3,7 +3,7 @@
 
     <item android:id="@+id/addupi"
         android:title="Add new UPI" />
-<!--    <item android:id="@+id/viewupi"-->
-<!--        android:title="View UPI" />-->
+    <item android:id="@+id/editupi"
+        android:title="Edit UPI" />
 
 </menu>
