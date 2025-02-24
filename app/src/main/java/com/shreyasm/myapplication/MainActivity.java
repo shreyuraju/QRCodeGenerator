@@ -247,8 +247,24 @@ public class MainActivity extends AppCompatActivity {
 
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
 
+        // Add the Delete button
+        builder.setNeutralButton("Delete", (dialog, which) -> {
+            String selectedUpiId = (String) upiIdSpinner.getSelectedItem();
+            if (upiDetails.containsKey(selectedUpiId)) {
+                upiDetails.remove(selectedUpiId);  // Remove the selected UPI ID
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString(KEY_UPI_DETAILS, serializeUpiDetails(upiDetails));  // Serialize and save the map
+                editor.apply();
+
+                // Update the UI
+                updateUI();
+                Toast.makeText(this, "UPI ID Deleted", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         builder.show();
     }
+
 
 
 
