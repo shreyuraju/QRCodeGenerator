@@ -401,7 +401,7 @@ public class MainActivity extends AppCompatActivity {
             String selectedUpiId = sharedPreferences.getString(KEY_SELECTED_UPI, null);
             String upiDetails = getUpiDetails().get(selectedUpiId);
 
-            String qrCodeContent = "upi://pay?pa=" + selectedUpiId + "&pn=" + upiname + "&mc=0000&tid=1234567890&tr=txn123&tn=Payment&am=" + amount + "&cu=INR";
+            String qrCodeContent = "upi://pay?pa=" + selectedUpiId + "&pn=" + upiname + "&mc=0000&am=" + amount + "&cu=INR";
 
             MultiFormatWriter writer = new MultiFormatWriter();
             BitMatrix bitMatrix = writer.encode(qrCodeContent, BarcodeFormat.QR_CODE, 500, 500);
