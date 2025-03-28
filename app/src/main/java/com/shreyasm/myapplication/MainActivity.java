@@ -121,6 +121,17 @@ public class MainActivity extends AppCompatActivity {
             String amnt = amount.getText().toString();
             try {
                 double n = Double.parseDouble(amnt);
+                // Define the regular expression
+                String regex = "^\\d{1,4}\\.\\d{1,2}$";
+
+// Convert the input number to a string
+                String input = String.valueOf(n);
+
+// Validate the input against the regex
+                if (!input.matches(regex)) {
+                    amount.setError("Invalid input! Ensure the format is ####.## (e.g., 1999.99)");
+                    return;
+                }
 
                 if (n < 1 || n > 2000) {
                     amount.setError("minimum amount is ₹1 & receive upto ₹2000");
